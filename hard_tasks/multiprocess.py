@@ -1,4 +1,4 @@
-from multiprocessing import Pool
+import multiprocessing
 import time
 import random
 start_time = time.time()
@@ -18,8 +18,12 @@ def selection_sort(arr):
 
 
 if __name__ == '__main__':
-    pool = Pool(processes=2)
+    # создаём набор процессов, кол-вом 2
+    pool = multiprocessing.Pool(processes=2)
+
     datas = [[random.randint(1, 1000) for _ in range(10000)] for _ in range(2)]
+
+    # запускаем функцию selection_sort для каждого элемента в списке
     results = pool.map(selection_sort, datas)
 
     print(*results, sep='\n')

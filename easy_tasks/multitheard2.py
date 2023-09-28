@@ -17,42 +17,26 @@ def selection_sort(arr):
     return arr
 
 
-def sort_list(lst):
-    selection_sort(lst)
-    return lst
-
-
 if __name__ == "__main__":
-    num_threads = 2
-    thread_lists = []
-
+    # создаём списки для сортировки
     data1 = [random.randint(1, 1000) for _ in range(10)]
     data2 = [random.randint(1, 1000) for _ in range(10)]
 
-    for _ in range(num_threads):
-        thread_lists.append([data1, data2])
+    # создаём поток, указывая какую в нём функцию надо выполнять и какие аргументы брать
+    th1 = threading.Thread(target=selection_sort, args=(data1,))
+    th2 = threading.Thread(target=selection_sort, args=(data2,))
 
-    start = 0
-    end = len(thread_lists) - 1
+    # запускаем потоки
+    th1.start()
+    th2.start()
 
-    while start <= end:
-        th1 = threading.Thread(target=sort_list, args=(thread_lists[start][0],))
-        th2 = threading.Thread(target=sort_list, args=(thread_lists[end][1],))
-
-        th1.start()
-        th2.start()
-
-        start += 1
-        end -= 1
-
+    # Когда первый поток достигает конца своего списка, он вызывает метод join(), чтобы дождаться завершения второго потока
+    # Второй поток продолжает получать списки из своего собственного списка до тех пор, пока не достигнет конца своего списка
     th1.join()
     th2.join()
 
-    sorted_list1 = thread_lists[0][0]
-    sorted_list2 = thread_lists[-1][1]
-
-    print(sorted_list1)
-    print(sorted_list2)
+    print(data1)
+    print(data2)
 
     end_time = time.time()
     print(end_time - start_time)

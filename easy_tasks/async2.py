@@ -21,14 +21,12 @@ async def main():
     list1 = [random.randint(1, 1000) for _ in range(10)]
     list2 = [random.randint(1, 1000) for _ in range(10)]
 
+    # создаём экземпляр цикла обработки событий
+    # (благодаря ему функции работают одновременно в одном потоке, не останавливая другие корутины)
     loop = asyncio.get_event_loop()
 
-    tasks = [
-        asyncio.ensure_future(sort_selection(list1)),
-        asyncio.ensure_future(sort_selection(list2)),
-    ]
-
-    await asyncio.gather(*tasks)
+    # запускаем функции
+    await asyncio.gather(sort_selection(list1), sort_selection(list2))
 
     print(list1)
     print(list2)
